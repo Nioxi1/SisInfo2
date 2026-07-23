@@ -1,0 +1,387 @@
+/* InicioAdm Page Styles */
+.inicio-adm-container {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+}
+
+/* Page Header Row */
+.page-header-row {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+}
+
+.page-main-title {
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: #0F2942;
+  letter-spacing: -0.01em;
+}
+
+.page-sub-title {
+  font-size: 0.9rem;
+  color: #64748B;
+  margin-top: 4px;
+}
+
+.btn-secondary-action {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  background-color: #FFFFFF;
+  border: 1px solid #CBD5E1;
+  border-radius: 8px;
+  padding: 9px 16px;
+  font-size: 0.88rem;
+  font-weight: 600;
+  color: #334155;
+  cursor: pointer;
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
+  transition: all 0.15s ease;
+}
+
+.btn-secondary-action:hover {
+  background-color: #F8FAFC;
+  border-color: #94A3B8;
+}
+
+/* Metrics Grid */
+.metrics-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 18px;
+}
+
+.metric-card {
+  background-color: #FFFFFF;
+  border: 1px solid #E2E8F0;
+  border-radius: 12px;
+  padding: 18px 20px;
+  display: flex;
+  flex-direction: column;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.02);
+}
+
+.metric-card-top {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 12px;
+}
+
+.metric-icon-box {
+  width: 40px;
+  height: 40px;
+  border-radius: 10px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.bg-blue-light { background-color: #EEF2FF; }
+.bg-green-light { background-color: #DCFCE7; }
+.bg-indigo-light { background-color: #DBEAFE; }
+.bg-red-light { background-color: #FEE2E2; }
+
+.metric-badge {
+  font-size: 0.75rem;
+  font-weight: 700;
+  padding: 3px 8px;
+  border-radius: 12px;
+}
+
+.green-badge {
+  background-color: #DCFCE7;
+  color: #166534;
+}
+
+.green-badge-text {
+  color: #16A34A;
+  font-size: 0.85rem;
+  font-weight: 700;
+}
+
+.red-badge-text {
+  color: #DC2626;
+  font-size: 0.85rem;
+  font-weight: 700;
+}
+
+.metric-cap-text {
+  font-size: 0.82rem;
+  font-weight: 700;
+  color: #475569;
+}
+
+.metric-label {
+  font-size: 0.72rem;
+  font-weight: 700;
+  color: #64748B;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  margin-bottom: 6px;
+}
+
+.metric-value {
+  font-size: 1.55rem;
+  font-weight: 800;
+  color: #0F172A;
+}
+
+/* Middle Dashboard Grid */
+.middle-dashboard-grid {
+  display: grid;
+  grid-template-columns: 2fr 1fr;
+  gap: 20px;
+}
+
+.dashboard-section-card {
+  background-color: #FFFFFF;
+  border: 1px solid #E2E8F0;
+  border-radius: 12px;
+  padding: 20px;
+  display: flex;
+  flex-direction: column;
+}
+
+.section-card-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 18px;
+}
+
+.section-title {
+  font-size: 1.1rem;
+  font-weight: 700;
+  color: #0F172A;
+}
+
+/* Pistas Legend & Row */
+.pistas-legend {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  font-size: 0.8rem;
+  color: #64748B;
+  font-weight: 500;
+}
+
+.legend-item {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+}
+
+.dot-green { background-color: #22C55E; }
+.dot-red { background-color: #EF4444; }
+
+.pistas-cards-row {
+  display: grid;
+  grid-template-columns: repeat(5, 1fr);
+  gap: 10px;
+}
+
+.pista-mini-card {
+  background-color: #F8FAFC;
+  border: 1px solid #E2E8F0;
+  border-radius: 8px;
+  padding: 12px 10px;
+  display: flex;
+  flex-direction: column;
+  text-align: center;
+  align-items: center;
+}
+
+.pista-title {
+  font-size: 0.72rem;
+  font-weight: 700;
+  color: #475569;
+  letter-spacing: 0.03em;
+  margin-bottom: 8px;
+}
+
+.pista-bar {
+  width: 100%;
+  height: 4px;
+  border-radius: 2px;
+  margin-bottom: 10px;
+}
+
+.bar-red { background-color: #DC2626; }
+.bar-green { background-color: #16A34A; }
+
+.pista-main-info {
+  font-size: 0.88rem;
+  font-weight: 700;
+  margin-bottom: 4px;
+}
+
+.red-text { color: #1E293B; }
+.green-text { color: #1E293B; }
+
+.pista-sub-info {
+  font-size: 0.72rem;
+  color: #64748B;
+  line-height: 1.2;
+}
+
+/* Acciones List */
+.acciones-list {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.accion-item-btn {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  background-color: #FFFFFF;
+  border: 1px solid #E2E8F0;
+  border-radius: 10px;
+  padding: 12px 14px;
+  cursor: pointer;
+  text-align: left;
+  transition: all 0.15s ease;
+}
+
+.accion-item-btn:hover {
+  border-color: #CBD5E1;
+  background-color: #F8FAFC;
+  transform: translateY(-1px);
+}
+
+.accion-icon-box {
+  width: 42px;
+  height: 42px;
+  border-radius: 10px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.accion-text {
+  display: flex;
+  flex-direction: column;
+}
+
+.accion-title {
+  font-size: 0.95rem;
+  font-weight: 700;
+  color: #0F172A;
+}
+
+.accion-sub {
+  font-size: 0.78rem;
+  color: #64748B;
+  margin-top: 1px;
+}
+
+/* Lower Dashboard Grid */
+.lower-dashboard-grid {
+  display: grid;
+  grid-template-columns: 2fr 1fr;
+  gap: 20px;
+}
+
+.btn-link {
+  background: none;
+  border: none;
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: #0F2942;
+  cursor: pointer;
+}
+
+.btn-link:hover {
+  text-decoration: underline;
+}
+
+.actividad-list {
+  display: flex;
+  flex-direction: column;
+}
+
+.actividad-item {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  padding: 12px 0;
+  border-bottom: 1px solid #F1F5F9;
+}
+
+.actividad-item:last-child {
+  border-bottom: none;
+}
+
+.actividad-icon-box {
+  width: 36px;
+  height: 36px;
+  border-radius: 8px;
+  background-color: #EEF2FF;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.actividad-info {
+  flex: 1;
+}
+
+.actividad-title {
+  font-size: 0.9rem;
+  font-weight: 700;
+  color: #0F172A;
+}
+
+.actividad-sub {
+  font-size: 0.78rem;
+  color: #64748B;
+  margin-top: 2px;
+}
+
+.chevron-icon {
+  color: #94A3B8;
+}
+
+/* Club Banner Card */
+.club-banner-card {
+  border-radius: 12px;
+  background-size: cover;
+  background-position: center;
+  position: relative;
+  overflow: hidden;
+  min-height: 200px;
+  display: flex;
+  align-items: flex-end;
+}
+
+.club-banner-overlay {
+  width: 100%;
+  background: linear-gradient(to top, rgba(15, 23, 42, 0.92) 0%, rgba(15, 23, 42, 0.4) 70%, transparent 100%);
+  padding: 20px;
+  color: #FFFFFF;
+}
+
+.club-banner-title {
+  font-size: 1.25rem;
+  font-weight: 800;
+  color: #FFFFFF;
+  margin-bottom: 6px;
+}
+
+.club-banner-sub {
+  font-size: 0.82rem;
+  color: #CBD5E1;
+  line-height: 1.4;
+}

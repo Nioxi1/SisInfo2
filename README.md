@@ -119,5 +119,3 @@ La app quedará en: **http://localhost:5173**
 ---
 
 ## Equipo
-
-- **cristian** — Diseño del formulario de registro (Sprint 1)
