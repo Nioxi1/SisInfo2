@@ -18,7 +18,7 @@
   transition: all 0.15s ease;
 }
 
-.btn-cancel:hover {
+.btn-cancel:hover:not(:disabled) {
   background-color: #F8FAFC;
   border-color: #94A3B8;
 }
@@ -35,6 +35,35 @@
   width: 100%;
   height: 100%;
   object-fit: cover;
+}
+
+/* Notification Banners */
+.notification-banner {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 14px 18px;
+  border-radius: 10px;
+  font-size: 0.92rem;
+  font-weight: 600;
+  animation: fadeIn 0.25s ease-in-out;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(-6px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.banner-success {
+  background-color: #DCFCE7;
+  color: #166534;
+  border: 1px solid #86EFAC;
+}
+
+.banner-error {
+  background-color: #FEE2E2;
+  color: #991B1B;
+  border: 1px solid #FCA5A5;
 }
 
 /* Form Card Container */
@@ -103,7 +132,7 @@
   color: #0F172A;
   outline: none;
   background-color: #FFFFFF;
-  transition: border-color 0.15s;
+  transition: all 0.15s ease-in-out;
 }
 
 .form-input::placeholder {
@@ -113,6 +142,22 @@
 .form-input:focus {
   border-color: #2563EB;
   box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1);
+}
+
+.form-input.input-invalid {
+  border-color: #EF4444 !important;
+  background-color: #FEF2F2;
+}
+
+.form-input.input-invalid:focus {
+  box-shadow: 0 0 0 3px rgba(239, 68, 68, 0.15);
+}
+
+.error-message-text {
+  font-size: 0.78rem;
+  color: #DC2626;
+  font-weight: 600;
+  margin-top: 5px;
 }
 
 .field-subtext {
@@ -156,8 +201,22 @@
   transition: background-color 0.15s ease;
 }
 
-.btn-save-socio:hover {
+.btn-save-socio:hover:not(:disabled) {
   background-color: #0F2942;
+}
+
+.btn-save-socio:disabled {
+  opacity: 0.7;
+  cursor: not-allowed;
+}
+
+.spinner-icon {
+  animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(360deg); }
 }
 
 /* Bottom Cards Grid */

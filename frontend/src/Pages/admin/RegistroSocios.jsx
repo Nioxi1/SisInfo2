@@ -1,35 +1,159 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import AdminLayout from '../../components/AdminLayout';
+import { sociosService } from '../../services/sociosService';
 import { 
   UserPlus, 
   Save, 
   ShieldCheck, 
   Headphones,
-  User
+  User,
+  CheckCircle,
+  AlertCircle,
+  Loader2
 } from 'lucide-react';
 import './RegistroSocios.css';
 
 export default function RegistroSocios() {
   const navigate = useNavigate();
+
   const [formData, setFormData] = useState({
     nombreCompleto: '',
     dniCodigo: '',
     fechaNacimiento: '',
     telefono: '',
     correoElectronico: '',
-    direccionPostal: ''
+    direccion: ''
   });
+
+  const [errors, setErrors] = useState({});
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [successMessage, setSuccessMessage] = useState('');
+  const [serverError, setServerError] = useState('');
+
+  const validate = () => {
+    const newErrors = {};
+
+    // Nombre Completo
+    if (!formData.nombreCompleto.trim()) {
+      newErrors.nombreCompleto = 'El nombre completo es obligatorio.';
+    } else if (formData.nombreCompleto.trim().length < 3) {
+      newErrors.nombreCompleto = 'El nombre completo debe tener al menos 3 caracteres.';
+    }
+
+    // DNI / Código
+    if (!formData.dniCodigo.trim()) {
+      newErrors.dniCodigo = 'El DNI / Código de socio es obligatorio.';
+    } else if (formData.dniCodigo.trim().length < 4) {
+      newErrors.dniCodigo = 'Debe ingresar un DNI o código válido (mínimo 4 caracteres).';
+    }
+
+    // Fecha de Nacimiento / Alta
+    if (!formData.fechaNacimiento.trim()) {
+      newErrors.fechaNacimiento = 'La fecha de nacimiento es obligatoria.';
+    }
+
+    // Teléfono
+    if (!formData.telefono.trim()) {
+      newErrors.telefono = 'El teléfono es obligatorio.';
+    } else if (formData.telefono.trim().length < 6) {
+      newErrors.telefono = 'Ingrese un número de teléfono válido.';
+    }
+
+    // Correo Electrónico
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (!formData.correoElectronico.trim()) {
+      newErrors.correoElectronico = 'El correo electrónico es obligatorio.';
+    } else if (!emailRegex.test(formData.correoElectronico.trim())) {
+      newErrors.correoElectronico = 'Formato de correo electrónico inválido (ejemplo@dominio.com).';
+    }
+
+    setErrors(newErrors);
+    return Object.keys(newErrors).length === 0;
+  };
 
   const handleChange = (e) => {
     const { name, value } = e.target;
     setFormData((prev) => ({ ...prev, [name]: value }));
+    
+    // Clear field error on change
+    if (errors[name]) {
+      setErrors((prev) => ({ ...prev, [name]: '' }));
+    }
+    if (serverError) {
+      setServerError('');
+    }
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    alert('Socio registrado con éxito');
-    navigate('/admin/socios');
+    setSuccessMessage('');
+    setServerError('');
+
+    if (!validate()) {
+      return;
+    }
+
+    setIsSubmitting(true);
+
+    try {
+      // Split nombreCompleto
+      const parts = formData.nombreCompleto.trim().split(' ');
+      const nombre = parts[0] || '';
+      const apellidos = parts.slice(1).join(' ') || parts[0];
+
+      // Format DNI & Generate Codigo
+      const dniClean = formData.dniCodigo.trim().toUpperCase();
+      const codigoClean = dniClean.startsWith('SOC-') 
+        ? dniClean 
+        : `SOC-${Math.floor(100 + Math.random() * 900)}`;
+
+      // Parse fecha
+      let fechaAlta = formData.fechaNacimiento.trim();
+      if (fechaAlta.includes('/')) {
+        const dateParts = fechaAlta.split('/');
+        if (dateParts.length === 3) {
+          // If DD/MM/YYYY -> YYYY-MM-DD
+          fechaAlta = `${dateParts[2]}-${dateParts[1].padStart(2, '0')}-${dateParts[0].padStart(2, '0')}`;
+        }
+      }
+
+      const payload = {
+        codigo: codigoClean,
+        nombre: nombre,
+        apellidos: apellidos,
+        email: formData.correoElectronico.trim(),
+        telefono: formData.telefono.trim(),
+        dni: dniClean,
+        fecha_alta: fechaAlta || new Date().toISOString().split('T')[0]
+      };
+
+      await sociosService.crear(payload);
+
+      setSuccessMessage('¡Socio registrado exitosamente en la base de datos!');
+      
+      // Navigate to /socios after 1.5 seconds
+      setTimeout(() => {
+        navigate('/socios');
+      }, 1500);
+
+    } catch (err) {
+      console.error('Error al guardar socio:', err);
+      if (err.response && err.response.data) {
+        const apiMsg = err.response.data.message || 'Ocurrió un error al guardar el socio.';
+        const apiErrors = err.response.data.errors;
+        if (apiErrors) {
+          const firstErrKey = Object.keys(apiErrors)[0];
+          setServerError(`${apiMsg} (${apiErrors[firstErrKey][0]})`);
+        } else {
+          setServerError(apiMsg);
+        }
+      } else {
+        setServerError('No se pudo conectar con el servidor backend. Verifique su conexión.');
+      }
+    } finally {
+      setIsSubmitting(false);
+    }
   };
 
   return (
@@ -61,11 +185,27 @@ export default function RegistroSocios() {
           <button 
             type="button"
             className="btn-cancel"
-            onClick={() => navigate('/admin/socios')}
+            onClick={() => navigate('/socios')}
+            disabled={isSubmitting}
           >
             Cancelar
           </button>
         </div>
+
+        {/* Global Notifications */}
+        {successMessage && (
+          <div className="notification-banner banner-success">
+            <CheckCircle size={20} />
+            <span>{successMessage}</span>
+          </div>
+        )}
+
+        {serverError && (
+          <div className="notification-banner banner-error">
+            <AlertCircle size={20} />
+            <span>{serverError}</span>
+          </div>
+        )}
 
         {/* Main Form Card */}
         <div className="form-card-container">
@@ -74,7 +214,7 @@ export default function RegistroSocios() {
             <h2 className="form-title">Información Personal</h2>
           </div>
 
-          <form onSubmit={handleSubmit} className="registro-form">
+          <form onSubmit={handleSubmit} className="registro-form" noValidate>
             <div className="form-grid">
               {/* Field 1 */}
               <div className="form-group">
@@ -85,9 +225,11 @@ export default function RegistroSocios() {
                   value={formData.nombreCompleto}
                   onChange={handleChange}
                   placeholder="Ej. Juan Pérez García"
-                  className="form-input"
-                  required
+                  className={`form-input ${errors.nombreCompleto ? 'input-invalid' : ''}`}
                 />
+                {errors.nombreCompleto && (
+                  <span className="error-message-text">{errors.nombreCompleto}</span>
+                )}
               </div>
 
               {/* Field 2 */}
@@ -99,38 +241,44 @@ export default function RegistroSocios() {
                   value={formData.dniCodigo}
                   onChange={handleChange}
                   placeholder="Ej. 12345678X"
-                  className="form-input"
-                  required
+                  className={`form-input ${errors.dniCodigo ? 'input-invalid' : ''}`}
                 />
-                <span className="field-subtext">Identificador único para el sistema.</span>
+                {errors.dniCodigo ? (
+                  <span className="error-message-text">{errors.dniCodigo}</span>
+                ) : (
+                  <span className="field-subtext">Identificador único para el sistema.</span>
+                )}
               </div>
 
               {/* Field 3 */}
               <div className="form-group">
                 <label className="form-label">FECHA DE NACIMIENTO *</label>
                 <input 
-                  type="text" 
+                  type="date" 
                   name="fechaNacimiento"
                   value={formData.fechaNacimiento}
                   onChange={handleChange}
-                  placeholder="mm/dd/yyyy"
-                  className="form-input"
-                  required
+                  className={`form-input ${errors.fechaNacimiento ? 'input-invalid' : ''}`}
                 />
+                {errors.fechaNacimiento && (
+                  <span className="error-message-text">{errors.fechaNacimiento}</span>
+                )}
               </div>
 
               {/* Field 4 */}
               <div className="form-group">
                 <label className="form-label">TELÉFONO *</label>
                 <input 
-                  type="text" 
+                  type="tel" 
                   name="telefono"
                   value={formData.telefono}
                   onChange={handleChange}
                   placeholder="+34 600 000 000"
-                  className="form-input"
-                  required
+                  className={`form-input ${errors.telefono ? 'input-invalid' : ''}`}
                 />
+                {errors.telefono && (
+                  <span className="error-message-text">{errors.telefono}</span>
+                )}
               </div>
 
               {/* Field 5 (Full Width) */}
@@ -142,10 +290,13 @@ export default function RegistroSocios() {
                   value={formData.correoElectronico}
                   onChange={handleChange}
                   placeholder="usuario@ejemplo.com"
-                  className="form-input"
-                  required
+                  className={`form-input ${errors.correoElectronico ? 'input-invalid' : ''}`}
                 />
-                <span className="field-subtext">Se enviará una confirmación de registro a esta dirección.</span>
+                {errors.correoElectronico ? (
+                  <span className="error-message-text">{errors.correoElectronico}</span>
+                ) : (
+                  <span className="field-subtext">Se enviará una confirmación de registro a esta dirección.</span>
+                )}
               </div>
 
               {/* Field 6 (Full Width) */}
@@ -153,8 +304,8 @@ export default function RegistroSocios() {
                 <label className="form-label">DIRECCIÓN POSTAL</label>
                 <input 
                   type="text" 
-                  name="direccionPostal"
-                  value={formData.direccionPostal}
+                  name="direccion"
+                  value={formData.direccion}
                   onChange={handleChange}
                   placeholder="Calle, Número, Piso, Ciudad"
                   className="form-input"
@@ -166,9 +317,22 @@ export default function RegistroSocios() {
 
             <div className="form-footer">
               <span className="required-notice">* Campos obligatorios</span>
-              <button type="submit" className="btn-save-socio">
-                <Save size={18} />
-                <span>Guardar Socio</span>
+              <button 
+                type="submit" 
+                className="btn-save-socio"
+                disabled={isSubmitting}
+              >
+                {isSubmitting ? (
+                  <>
+                    <Loader2 size={18} className="spinner-icon" />
+                    <span>Guardando...</span>
+                  </>
+                ) : (
+                  <>
+                    <Save size={18} />
+                    <span>Guardar Socio</span>
+                  </>
+                )}
               </button>
             </div>
           </form>

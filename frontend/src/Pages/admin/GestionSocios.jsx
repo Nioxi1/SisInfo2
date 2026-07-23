@@ -1,5 +1,7 @@
+import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import AdminLayout from '../../components/AdminLayout';
+import { sociosService } from '../../services/sociosService';
 import { 
   Plus, 
   TrendingUp, 
@@ -9,55 +11,48 @@ import {
   Download, 
   ChevronLeft, 
   ChevronRight,
-  ArrowRight
+  ArrowRight,
+  Loader2
 } from 'lucide-react';
 import './GestionSocios.css';
 
 export default function GestionSocios() {
   const navigate = useNavigate();
+  const [socios, setSocios] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [searchQuery, setSearchQuery] = useState('');
 
-  const sociosData = [
-    {
-      codigo: 'SOC-001',
-      nombre: 'Alejandro Mendoza',
-      initials: 'AM',
-      avatarBg: '#BFDBFE',
-      avatarColor: '#1D4ED8',
-      email: 'a.mendoza@email.com',
-      telefono: '+54 11 4567 8910',
-      estado: 'Activo'
-    },
-    {
-      codigo: 'SOC-002',
-      nombre: 'Beatriz Peña',
-      initials: 'BP',
-      avatarBg: '#1E293B',
-      avatarColor: '#FFFFFF',
-      email: 'b.pena@email.com',
-      telefono: '+54 11 5678 1234',
-      estado: 'Inactivo'
-    },
-    {
-      codigo: 'SOC-003',
-      nombre: 'Carlos Rodríguez',
-      initials: 'CR',
-      avatarBg: '#86EFAC',
-      avatarColor: '#14532D',
-      email: 'c.rod@email.com',
-      telefono: '+54 11 9876 5432',
-      estado: 'Activo'
-    },
-    {
-      codigo: 'SOC-004',
-      nombre: 'Diana Villalba',
-      initials: 'DV',
-      avatarBg: '#DDD6FE',
-      avatarColor: '#581C87',
-      email: 'dvillalba@email.com',
-      telefono: '+54 11 2233 4455',
-      estado: 'Activo'
-    }
+  const defaultAvatarColors = [
+    { bg: '#BFDBFE', color: '#1D4ED8' },
+    { bg: '#1E293B', color: '#FFFFFF' },
+    { bg: '#86EFAC', color: '#14532D' },
+    { bg: '#DDD6FE', color: '#581C87' },
+    { bg: '#FDE68A', color: '#92400E' }
   ];
+
+  const fetchSocios = async (busqueda = '') => {
+    try {
+      setLoading(true);
+      const res = await sociosService.listar(busqueda);
+      if (res.data && res.data.data) {
+        setSocios(res.data.data);
+      }
+    } catch (err) {
+      console.error('Error al obtener lista de socios:', err);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  useEffect(() => {
+    fetchSocios(searchQuery);
+  }, [searchQuery]);
+
+  const getInitials = (nombre, apellidos) => {
+    const n = nombre ? nombre[0] : '';
+    const a = apellidos ? apellidos[0] : '';
+    return (n + a).toUpperCase() || 'SO';
+  };
 
   return (
     <AdminLayout 
@@ -94,7 +89,9 @@ export default function GestionSocios() {
               <span className="summary-card-title">SOCIOS ACTIVOS</span>
               <TrendingUp size={18} color="#22C55E" />
             </div>
-            <div className="summary-card-value">1,248</div>
+            <div className="summary-card-value">
+              {socios.length > 0 ? socios.filter(s => s.activo).length : '1,248'}
+            </div>
             <div className="summary-card-sub text-muted">+12% vs mes anterior</div>
           </div>
 
@@ -137,58 +134,69 @@ export default function GestionSocios() {
           </div>
 
           <div className="table-wrapper">
-            <table className="socios-table">
-              <thead>
-                <tr>
-                  <th>CÓDIGO</th>
-                  <th>NOMBRE</th>
-                  <th>CONTACTO</th>
-                  <th>ESTADO</th>
-                  <th>ACCIONES</th>
-                </tr>
-              </thead>
-              <tbody>
-                {sociosData.map((socio) => (
-                  <tr key={socio.codigo}>
-                    <td className="font-bold-code">{socio.codigo}</td>
-                    <td>
-                      <div className="user-cell">
-                        <div 
-                          className="user-avatar"
-                          style={{ backgroundColor: socio.avatarBg, color: socio.avatarColor }}
-                        >
-                          {socio.initials}
-                        </div>
-                        <span className="user-name">{socio.nombre}</span>
-                      </div>
-                    </td>
-                    <td>
-                      <div className="contact-cell">
-                        <span className="contact-email">{socio.email}</span>
-                        <span className="contact-phone">{socio.telefono}</span>
-                      </div>
-                    </td>
-                    <td>
-                      <span className={`status-badge ${socio.estado === 'Activo' ? 'badge-activo' : 'badge-inactivo'}`}>
-                        {socio.estado}
-                      </span>
-                    </td>
-                    <td>{/* Actions */}</td>
+            {loading ? (
+              <div className="loading-state-box" style={{ padding: '40px', textAlign: 'center', color: '#64748B' }}>
+                <Loader2 size={24} className="spinner-icon" style={{ marginBottom: '8px' }} />
+                <p>Cargando lista de socios...</p>
+              </div>
+            ) : (
+              <table className="socios-table">
+                <thead>
+                  <tr>
+                    <th>CÓDIGO</th>
+                    <th>NOMBRE</th>
+                    <th>CONTACTO</th>
+                    <th>ESTADO</th>
+                    <th>ACCIONES</th>
                   </tr>
-                ))}
-              </tbody>
-            </table>
+                </thead>
+                <tbody>
+                  {socios.map((socio, idx) => {
+                    const style = defaultAvatarColors[idx % defaultAvatarColors.length];
+                    const nombreCompleto = `${socio.nombre} ${socio.apellidos || ''}`.trim();
+                    const isActivo = socio.activo ?? true;
+
+                    return (
+                      <tr key={socio.id || socio.codigo}>
+                        <td className="font-bold-code">{socio.codigo}</td>
+                        <td>
+                          <div className="user-cell">
+                            <div 
+                              className="user-avatar"
+                              style={{ backgroundColor: style.bg, color: style.color }}
+                            >
+                              {getInitials(socio.nombre, socio.apellidos)}
+                            </div>
+                            <span className="user-name">{nombreCompleto}</span>
+                          </div>
+                        </td>
+                        <td>
+                          <div className="contact-cell">
+                            <span className="contact-email">{socio.email}</span>
+                            <span className="contact-phone">{socio.telefono || '-'}</span>
+                          </div>
+                        </td>
+                        <td>
+                          <span className={`status-badge ${isActivo ? 'badge-activo' : 'badge-inactivo'}`}>
+                            {isActivo ? 'Activo' : 'Inactivo'}
+                          </span>
+                        </td>
+                        <td>{/* Actions */}</td>
+                      </tr>
+                    );
+                  })}
+                </tbody>
+              </table>
+            )}
           </div>
 
           {/* Table Footer / Pagination */}
           <div className="table-footer">
-            <div className="footer-count">Mostrando 4 de 1,248 socios</div>
+            <div className="footer-count">Mostrando {socios.length} socios</div>
             <div className="pagination">
               <button className="page-nav-btn" disabled><ChevronLeft size={16} /></button>
               <button className="page-number-btn active">1</button>
-              <button className="page-number-btn">2</button>
-              <button className="page-number-btn">3</button>
-              <button className="page-nav-btn"><ChevronRight size={16} /></button>
+              <button className="page-nav-btn" disabled><ChevronRight size={16} /></button>
             </div>
           </div>
         </div>
