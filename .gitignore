@@ -1,0 +1,25 @@
+# Dependencias
+backend/vendor/
+backend/node_modules/
+frontend/node_modules/
+
+# Entorno
+backend/.env
+frontend/.env
+
+# Build
+frontend/dist/
+
+# IDE / OS
+.idea/
+.vscode/
+*.swp
+.DS_Store
+Thumbs.db
+
+# Laravel
+backend/storage/*.key
+backend/.phpunit.result.cache
+
+# SQLite local (opcional — descomenta si no quieres versionar la BD)
+# backend/database/database.sqlite
