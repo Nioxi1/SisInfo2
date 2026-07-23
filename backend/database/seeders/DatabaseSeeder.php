@@ -10,6 +10,10 @@ class DatabaseSeeder extends Seeder
 {
     public function run(): void
     {
+        $this->call([
+            AdminUserSeeder::class,
+        ]);
+
         for ($i = 1; $i <= 5; $i++) {
             Pista::firstOrCreate(
                 ['numero' => $i],
