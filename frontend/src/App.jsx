@@ -4,6 +4,8 @@ import InicioAdm from './Pages/admin/InicioAdm';
 import GestionSocios from './Pages/admin/GestionSocios';
 import RegistroSocios from './Pages/admin/RegistroSocios';
 import './App.css';
+import NuevaReserva from './Pages/admin/NuevaReserva';
+import LimiteReservas from './Pages/admin/LimiteReservas';
 
 export default function App() {
   return (
@@ -25,6 +27,15 @@ export default function App() {
         <Route path="/registro-socios" element={<RegistroSocios />} />
         <Route path="/admin/registro-socios" element={<RegistroSocios />} />
         
+        <Route
+  path="/admin/reservas/nueva"
+  element={<NuevaReserva />}
+/>
+
+<Route
+  path="/admin/reservas/limite"
+  element={<LimiteReservas />}
+/>
         {/* Fallback */}
         <Route path="*" element={<Navigate to="/" replace />} />
       </Routes>
