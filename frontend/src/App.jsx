@@ -9,6 +9,8 @@ import './App.css';
 import NuevaReserva from './Pages/admin/NuevaReserva';
 import LimiteReservas from './Pages/admin/LimiteReservas';
 import ControlOcupacion from './Pages/admin/ControlOcupacion';
+import ControlInasistencias from './Pages/admin/ControlInasistencias';
+import GeneracionFacturas from './Pages/admin/GeneracionFacturas';
 
 export default function App() {
   return (
@@ -47,6 +49,15 @@ export default function App() {
         {/* Reservas — Control de ocupación (HU5) */}
         <Route path="/admin/reservas/ocupacion" element={<ControlOcupacion />} />
         <Route path="/reservas" element={<ControlOcupacion />} />
+
+        <Route
+path="/admin/inasistencias"
+  element={<ControlInasistencias />}
+/>
+<Route
+  path="/admin/facturas"
+  element={<GeneracionFacturas />}
+/>
 
         {/* Fallback */}
         <Route path="*" element={<Navigate to="/" replace />} />

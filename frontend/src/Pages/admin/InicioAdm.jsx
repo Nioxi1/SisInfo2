@@ -180,6 +180,7 @@ export default function InicioAdm() {
                 <div className="accion-text">
                   <span className="accion-title">Generar Facturas</span>
                   <span className="accion-sub">Procesar remesas del mes</span>
+                  onClick={() => navigate('/admin/facturas')}
                 </div>
               </button>
             </div>
