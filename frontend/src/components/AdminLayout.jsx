@@ -10,7 +10,8 @@ import {
   HelpCircle, 
   User, 
   Plus,
-  LayoutGrid
+  LayoutGrid,
+  CalendarCheck
 } from 'lucide-react';
 import './AdminLayout.css';
 
@@ -60,6 +61,13 @@ export default function AdminLayout({
           >
             <LayoutGrid className="nav-icon" size={18} />
             <span>Pistas</span>
+          </button>
+ <button 
+            className={`nav-item ${getIsActive(['/reservas', '/ocupacion'], 'reservas') ? 'active' : ''}`}
+            onClick={() => navigate('/admin/reservas/ocupacion')}
+          >
+            <CalendarCheck className="nav-icon" size={18} />
+            <span>Reservas</span>
           </button>
 
           <button 

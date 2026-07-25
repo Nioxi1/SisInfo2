@@ -15,6 +15,38 @@ use Illuminate\Validation\ValidationException;
 class ReservaController extends Controller
 {
     /**
+     * Lista las reservas de una fecha (por defecto hoy), con búsqueda opcional.
+     * NUEVO — HU5 "Control de ocupación"
+     */
+    public function index(Request $request): JsonResponse
+    {
+        $fecha = $request->query('fecha', now()->toDateString());
+
+        $query = Reserva::with(['socio', 'pista'])
+            ->whereDate('fecha', $fecha);
+
+        if ($busqueda = $request->query('busqueda')) {
+            $query->where(function ($q) use ($busqueda) {
+                $q->whereHas('socio', function ($qs) use ($busqueda) {
+                    $qs->where('nombre', 'like', "%{$busqueda}%")
+                        ->orWhere('apellidos', 'like', "%{$busqueda}%")
+                        ->orWhere('codigo', 'like', "%{$busqueda}%");
+                })->orWhereHas('pista', function ($qp) use ($busqueda) {
+                    $qp->where('numero', 'like', "%{$busqueda}%")
+                        ->orWhere('nombre', 'like', "%{$busqueda}%");
+                });
+            });
+        }
+
+        $reservas = $query->orderBy('hora_inicio')->get();
+
+        return response()->json([
+            'success' => true,
+            'data' => $reservas,
+        ]);
+    }
+
+    /**
      * Comprueba si una fecha se encuentra dentro del periodo permitido.
      */
     public function validarLimite(Request $request): JsonResponse
@@ -65,7 +97,7 @@ class ReservaController extends Controller
         );
 
         $pistas = Pista::query()
-            ->where('activa', true)
+            ->where('estado', 'disponible')
             ->orderBy('numero')
             ->get()
             ->map(function (Pista $pista) use ($datos, $inicio, $fin) {
@@ -136,9 +168,9 @@ class ReservaController extends Controller
 
         $pista = Pista::query()->findOrFail($datos['pista_id']);
 
-        if (!$pista->activa) {
+        if ($pista->estado !== 'disponible') {
             throw ValidationException::withMessages([
-                'pista_id' => 'La pista seleccionada se encuentra inactiva.',
+                'pista_id' => 'La pista seleccionada no está disponible.',
             ]);
         }
 
@@ -190,6 +222,49 @@ class ReservaController extends Controller
                 ],
             ],
         ], 201);
+    }
+
+    /**
+     * Registra la ocupación de una reserva (pasa su estado a "ocupada").
+     * NUEVO — HU5 "Control de ocupación"
+     */
+    public function ocupar(Reserva $reserva): JsonResponse
+    {
+        if ($reserva->estado !== 'activa') {
+            return response()->json([
+                'success' => false,
+                'message' => 'Solo se puede registrar la ocupación de reservas activas.',
+            ], 422);
+        }
+
+        $hoy = now()->toDateString();
+        $ahora = now()->format('H:i:s');
+
+        if ($reserva->fecha->format('Y-m-d') !== $hoy) {
+            return response()->json([
+                'success' => false,
+                'message' => 'La reserva no corresponde a la fecha actual.',
+            ], 422);
+        }
+
+        if ($ahora < $reserva->hora_inicio || $ahora > $reserva->hora_fin) {
+            return response()->json([
+                'success' => false,
+                'message' => 'El horario actual no corresponde al horario reservado.',
+            ], 422);
+        }
+
+        $reserva->update([
+            'estado' => 'ocupada',
+            'ocupada' => true,
+            'ocupada_at' => now(),
+        ]);
+
+        return response()->json([
+            'success' => true,
+            'message' => 'Ocupación registrada exitosamente.',
+            'data' => $reserva->fresh(['socio', 'pista']),
+        ]);
     }
 
     /**
