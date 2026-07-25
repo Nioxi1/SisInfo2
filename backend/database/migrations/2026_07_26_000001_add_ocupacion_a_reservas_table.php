@@ -9,19 +9,60 @@ return new class extends Migration
 {
     public function up(): void
     {
-        Schema::table('reservas', function (Blueprint $table) {
-            $table->timestamp('ocupada_at')->nullable()->after('primera_no_ocupacion_anio');
-        });
+        /*
+         * El intento anterior pudo haber creado ocupada_at antes
+         * de fallar. Esta validación evita duplicar la columna.
+         */
+        if (! Schema::hasColumn('reservas', 'ocupada_at')) {
+            Schema::table('reservas', function (Blueprint $table) {
+                $table->timestamp('ocupada_at')
+                    ->nullable()
+                    ->after('primera_no_ocupacion_anio');
+            });
+        }
 
-        DB::statement("ALTER TABLE reservas MODIFY estado ENUM('activa','ocupada','cancelada','completada','no_ocupada') NOT NULL DEFAULT 'activa'");
+        /*
+         * Laravel genera la modificación adecuada según
+         * el motor de base de datos.
+         */
+        Schema::table('reservas', function (Blueprint $table) {
+            $table->enum('estado', [
+                'activa',
+                'ocupada',
+                'cancelada',
+                'completada',
+                'no_ocupada',
+            ])
+                ->default('activa')
+                ->change();
+        });
     }
 
     public function down(): void
     {
+        /*
+         * Evita errores al retirar el valor "ocupada"
+         * si existen registros con ese estado.
+         */
+        DB::table('reservas')
+            ->where('estado', 'ocupada')
+            ->update(['estado' => 'completada']);
+
         Schema::table('reservas', function (Blueprint $table) {
-            $table->dropColumn('ocupada_at');
+            $table->enum('estado', [
+                'activa',
+                'cancelada',
+                'completada',
+                'no_ocupada',
+            ])
+                ->default('activa')
+                ->change();
         });
 
-        DB::statement("ALTER TABLE reservas MODIFY estado ENUM('activa','cancelada','completada','no_ocupada') NOT NULL DEFAULT 'activa'");
+        if (Schema::hasColumn('reservas', 'ocupada_at')) {
+            Schema::table('reservas', function (Blueprint $table) {
+                $table->dropColumn('ocupada_at');
+            });
+        }
     }
 };
