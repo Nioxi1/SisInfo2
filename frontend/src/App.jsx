@@ -3,6 +3,8 @@ import Login from './Pages/Login';
 import InicioAdm from './Pages/admin/InicioAdm';
 import GestionSocios from './Pages/admin/GestionSocios';
 import RegistroSocios from './Pages/admin/RegistroSocios';
+import GestionPistas from './Pages/admin/GestionPistas';
+import RegistroPista from './Pages/admin/RegistroPista';
 import './App.css';
 import NuevaReserva from './Pages/admin/NuevaReserva';
 import LimiteReservas from './Pages/admin/LimiteReservas';
@@ -26,6 +28,17 @@ export default function App() {
         <Route path="/registroSocios" element={<RegistroSocios />} />
         <Route path="/registro-socios" element={<RegistroSocios />} />
         <Route path="/admin/registro-socios" element={<RegistroSocios />} />
+
+        {/* Pistas Routes */}
+        <Route path="/pistas" element={<GestionPistas />} />
+        <Route path="/gestion-pistas" element={<GestionPistas />} />
+        <Route path="/admin/pistas" element={<GestionPistas />} />
+
+        <Route path="/pistas/nueva" element={<RegistroPista />} />
+        <Route path="/registroPista" element={<RegistroPista />} />
+        <Route path="/registro-pista" element={<RegistroPista />} />
+
+        <Route path="/pistas/editar/:id" element={<RegistroPista />} />
         
         <Route
   path="/admin/reservas/nueva"

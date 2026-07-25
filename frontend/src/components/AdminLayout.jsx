@@ -9,7 +9,8 @@ import {
   Bell, 
   HelpCircle, 
   User, 
-  Plus
+  Plus,
+  LayoutGrid
 } from 'lucide-react';
 import './AdminLayout.css';
 
@@ -52,6 +53,13 @@ export default function AdminLayout({
           >
             <Users className="nav-icon" size={18} />
             <span>Socios</span>
+          </button>
+           <button 
+            className={`nav-item ${getIsActive(['/pistas', '/registropista', '/registro-pista'], 'pistas') ? 'active' : ''}`}
+            onClick={() => navigate('/pistas')}
+          >
+            <LayoutGrid className="nav-icon" size={18} />
+            <span>Pistas</span>
           </button>
 
           <button 

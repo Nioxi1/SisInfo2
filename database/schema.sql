@@ -21,9 +21,13 @@ CREATE TABLE pistas (
     id BIGINT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
     numero TINYINT UNSIGNED NOT NULL UNIQUE,
     nombre VARCHAR(50) NOT NULL,
-    activa TINYINT(1) NOT NULL DEFAULT 1,
+    superficie VARCHAR(20) NOT NULL DEFAULT 'Dura',
+    iluminacion TINYINT(1) NOT NULL DEFAULT 0,
+    precio_hora DECIMAL(8,2) NOT NULL DEFAULT 0,
+    estado ENUM('disponible', 'reservada', 'mantenimiento') NOT NULL DEFAULT 'disponible',
     created_at TIMESTAMP NULL,
-    updated_at TIMESTAMP NULL
+    updated_at TIMESTAMP NULL,
+    deleted_at TIMESTAMP NULL
 );
 
 CREATE TABLE tarifas (
@@ -78,12 +82,12 @@ CREATE TABLE facturas (
 );
 
 -- Datos iniciales
-INSERT INTO pistas (numero, nombre, activa, created_at, updated_at) VALUES
-(1, 'Pista 1', 1, NOW(), NOW()),
-(2, 'Pista 2', 1, NOW(), NOW()),
-(3, 'Pista 3', 1, NOW(), NOW()),
-(4, 'Pista 4', 1, NOW(), NOW()),
-(5, 'Pista 5', 1, NOW(), NOW());
+INSERT INTO pistas (numero, nombre, superficie, iluminacion, precio_hora, estado, created_at, updated_at) VALUES
+(1, 'Pista Central', 'Arcilla', 1, 150.00, 'disponible', NOW(), NOW()),
+(2, 'Pista 2', 'Dura', 1, 120.00, 'reservada', NOW(), NOW()),
+(3, 'Pista 3', 'Arcilla', 1, 150.00, 'mantenimiento', NOW(), NOW()),
+(4, 'Pista 4', 'Dura', 0, 120.00, 'disponible', NOW(), NOW()),
+(5, 'Pista 5', 'Arcilla', 1, 150.00, 'disponible', NOW(), NOW());
 
 INSERT INTO tarifas (precio_hora, tarifa_cancelacion_minima, vigente_desde, created_at, updated_at) VALUES
 (15.00, 5.00, '2026-01-01', NOW(), NOW());
