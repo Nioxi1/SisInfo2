@@ -40,4 +40,8 @@ class Reserva extends Model
     {
         return $this->belongsTo(Pista::class);
     }
+    public function multa()
+{
+    return $this->hasOne(Multa::class);
+}
 }
