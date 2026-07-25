@@ -8,6 +8,7 @@ import RegistroPista from './Pages/admin/RegistroPista';
 import './App.css';
 import NuevaReserva from './Pages/admin/NuevaReserva';
 import LimiteReservas from './Pages/admin/LimiteReservas';
+import ControlOcupacion from './Pages/admin/ControlOcupacion';
 
 export default function App() {
   return (
@@ -40,15 +41,13 @@ export default function App() {
 
         <Route path="/pistas/editar/:id" element={<RegistroPista />} />
         
-        <Route
-  path="/admin/reservas/nueva"
-  element={<NuevaReserva />}
-/>
+        <Route path="/admin/reservas/nueva" element={<NuevaReserva />} />
+        <Route path="/admin/reservas/limite" element={<LimiteReservas />} />
 
-<Route
-  path="/admin/reservas/limite"
-  element={<LimiteReservas />}
-/>
+        {/* Reservas — Control de ocupación (HU5) */}
+        <Route path="/admin/reservas/ocupacion" element={<ControlOcupacion />} />
+        <Route path="/reservas" element={<ControlOcupacion />} />
+
         {/* Fallback */}
         <Route path="*" element={<Navigate to="/" replace />} />
       </Routes>

@@ -20,4 +20,14 @@ export const reservasService = {
     client.get('/reservas/calendario', {
       params: { mes },
     }),
+
+  // NUEVO — HU5 "Control de ocupación"
+  listarPorFecha: (fecha = '', busqueda = '') =>
+    client.get('/reservas', {
+      params: { ...(fecha && { fecha }), ...(busqueda && { busqueda }) },
+    }),
+
+  // NUEVO — HU5 "Control de ocupación"
+  registrarOcupacion: (id) =>
+    client.patch(`/reservas/${id}/ocupar`),
 };

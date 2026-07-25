@@ -16,6 +16,7 @@ class Reserva extends Model
         'estado',
         'ocupada',
         'cancelada_at',
+        'ocupada_at',
         'primera_no_ocupacion_anio',
     ];
 
@@ -25,6 +26,7 @@ class Reserva extends Model
             'fecha' => 'date',
             'ocupada' => 'boolean',
             'cancelada_at' => 'datetime',
+            'ocupada_at' => 'datetime',
             'primera_no_ocupacion_anio' => 'boolean',
         ];
     }

@@ -1,0 +1,74 @@
+.ocupacion-container {
+  display: grid;
+  grid-template-columns: 1fr 340px;
+  gap: 24px;
+  align-items: start;
+}
+
+.reserva-list {
+  margin-top: 16px;
+  background: #fff;
+  border: 1px solid #E2E8F0;
+  border-radius: 12px;
+  overflow: hidden;
+}
+
+.reserva-row {
+  display: grid;
+  grid-template-columns: 1.6fr 1fr 1fr 1fr;
+  align-items: center;
+  gap: 12px;
+  padding: 14px 20px;
+  border-bottom: 1px solid #F1F5F9;
+  cursor: pointer;
+}
+
+.reserva-row:last-child { border-bottom: none; }
+.reserva-row-active { background: #F8FAFC; }
+
+.reserva-row-socio { display: flex; align-items: center; gap: 10px; }
+.reserva-row-pista, .reserva-row-horario {
+  display: flex; align-items: center; gap: 6px; color: #475569; font-size: 13px;
+}
+.reserva-row-estado { display: flex; justify-content: flex-end; }
+
+.status-badge.badge-ocupada { background-color: #DCFCE7; color: #166534; }
+.status-badge.badge-neutro { background-color: #F1F5F9; color: #475569; }
+
+.btn-registrar-mini {
+  background: #1D4ED8; color: #fff; border: none; border-radius: 6px;
+  padding: 6px 14px; font-size: 13px; cursor: pointer;
+}
+.btn-registrar-mini:disabled { background: #CBD5E1; cursor: not-allowed; }
+
+.no-valido-cell { display: flex; flex-direction: column; align-items: flex-end; gap: 2px; }
+.texto-no-valido { font-size: 11px; color: #DC2626; }
+
+.ocupacion-detail-panel {
+  background: #fff; border: 1px solid #E2E8F0; border-radius: 12px; padding: 20px;
+}
+.detail-socio-card { text-align: center; padding-bottom: 16px; border-bottom: 1px solid #F1F5F9; }
+.detail-avatar {
+  width: 56px; height: 56px; border-radius: 50%; background: #1E293B; color: #fff;
+  display: flex; align-items: center; justify-content: center; margin: 0 auto 10px;
+}
+.detail-socio-name { font-weight: 700; font-size: 15px; }
+.detail-socio-sub { color: #64748B; font-size: 12px; margin-top: 2px; }
+.detail-section-title { font-size: 11px; font-weight: 700; color: #94A3B8; margin: 18px 0 8px; }
+.detail-info-grid { display: flex; flex-direction: column; gap: 10px; }
+.detail-info-box {
+  display: flex; align-items: center; gap: 10px; border: 1px solid #F1F5F9;
+  border-radius: 8px; padding: 10px 12px;
+}
+.detail-info-label { font-size: 11px; color: #94A3B8; }
+.detail-info-value { font-size: 13px; font-weight: 600; }
+.detail-actions { margin-top: 20px; }
+.btn-full { width: 100%; justify-content: center; }
+
+.toast-notif {
+  position: fixed; top: 16px; right: 24px; background: #ECFDF5; color: #065F46;
+  border: 1px solid #A7F3D0; border-radius: 8px; padding: 10px 16px;
+  display: flex; align-items: center; gap: 8px; font-size: 13px; z-index: 100;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+}
+.toast-error { background: #FEF2F2; color: #991B1B; border-color: #FECACA; }
