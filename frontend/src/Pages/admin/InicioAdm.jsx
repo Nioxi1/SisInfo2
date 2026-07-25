@@ -163,15 +163,20 @@ export default function InicioAdm() {
                 </div>
               </button>
 
-              <button className="accion-item-btn">
-                <div className="accion-icon-box bg-green-light">
-                  <CalendarPlus size={20} color="#16A34A" />
-                </div>
-                <div className="accion-text">
-                  <span className="accion-title">Nueva Reserva</span>
-                  <span className="accion-sub">Reservar pista o actividad</span>
-                </div>
-              </button>
+             <button
+                  type="button"
+                  className="action-item-btn reserva-action"
+                  onClick={() => navigate('/admin/reservas/nueva')}
+                >
+                  <div className="action-icon-box bg-green-light">
+                    <CalendarPlus size={20} color="#16A34A" />
+                  </div>
+
+                  <div className="action-text">
+                    <span className="action-title">Nueva Reserva</span>
+                    <span className="action-sub">Reservar pista o actividad</span>
+                  </div>
+                </button>
 
               <button className="accion-item-btn">
                 <div className="accion-icon-box bg-indigo-light">

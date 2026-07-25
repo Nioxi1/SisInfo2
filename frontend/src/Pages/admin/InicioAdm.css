@@ -385,3 +385,72 @@
   color: #CBD5E1;
   line-height: 1.4;
 }
+/* Corrección del acceso rápido a Nueva Reserva */
+.action-item-btn.reserva-action {
+  width: 100%;
+  min-height: 84px;
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  gap: 16px;
+
+  padding: 14px 18px;
+  margin: 0;
+
+  background: #ffffff;
+  border: 1px solid #d7e0ec;
+  border-radius: 14px;
+
+  color: #0b1f44;
+  font: inherit;
+  text-align: left;
+  cursor: pointer;
+  appearance: none;
+
+  transition:
+    border-color 0.2s ease,
+    box-shadow 0.2s ease,
+    transform 0.2s ease;
+}
+
+.action-item-btn.reserva-action:hover {
+  border-color: #9cb6dc;
+  box-shadow: 0 5px 14px rgba(15, 41, 77, 0.08);
+  transform: translateY(-1px);
+}
+
+.action-item-btn.reserva-action .action-icon-box {
+  width: 52px;
+  height: 52px;
+  min-width: 52px;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  border-radius: 12px;
+  background: #dcfce7;
+}
+
+.action-item-btn.reserva-action .action-text {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 4px;
+}
+
+.action-item-btn.reserva-action .action-title {
+  display: block;
+  color: #071a3d;
+  font-size: 17px;
+  font-weight: 700;
+  line-height: 1.2;
+}
+
+.action-item-btn.reserva-action .action-sub {
+  display: block;
+  color: #64748b;
+  font-size: 14px;
+  font-weight: 400;
+  line-height: 1.3;
+}
